@@ -20,7 +20,7 @@ let roadLayer;
 let treeGroup = [];
 
 // 新增：UI 變數
-let menuDiv, infoDiv, iframeOverlay, iframeEl, closeBtn, iframeOverlay2, iframeEl2, closeBtn2, iframeOverlay3, iframeEl3, closeBtn3, textOverlay, textDiv;
+let menuDiv, infoDiv, iframeOverlay, iframeEl, closeBtn, iframeOverlay2, iframeEl2, closeBtn2, iframeOverlay3, iframeEl3, closeBtn3, textOverlay, textDiv, subMenuDiv, subBtnMain, subBtnDept;
 
 // -----------------------------
 // Setup
@@ -44,6 +44,43 @@ function setup() {
   createIframeOverlay3();
   // 新增：建立自介文字視窗
   createTextOverlay();
+  // 新增：建立淡江大學 子選單（隱藏）
+  createSubmenu();
+}
+
+// 新增：淡江大學 子選單（在選單內顯示兩個按鈕）
+function createSubmenu() {
+  subMenuDiv = createDiv();
+  subMenuDiv.parent(menuDiv);
+  subMenuDiv.id('subMenu');
+  subMenuDiv.style('margin-top', '6px');
+  subMenuDiv.style('display', 'none');
+
+  subBtnMain = createButton('淡江大學（主站）');
+  subBtnMain.parent(subMenuDiv);
+  subBtnMain.style('display', 'block');
+  subBtnMain.style('width', '100%');
+  subBtnMain.style('margin', '6px 0');
+  subBtnMain.style('padding', '6px 8px');
+  subBtnMain.style('text-align', 'left');
+  subBtnMain.style('background', '#eef');
+  subBtnMain.style('border', '1px solid #cce');
+  subBtnMain.mousePressed(() => {
+    try { window.open('https://www.tku.edu.tw/', '_blank'); } catch (e) {}
+  });
+
+  subBtnDept = createButton('教育科技系');
+  subBtnDept.parent(subMenuDiv);
+  subBtnDept.style('display', 'block');
+  subBtnDept.style('width', '100%');
+  subBtnDept.style('margin', '6px 0');
+  subBtnDept.style('padding', '6px 8px');
+  subBtnDept.style('text-align', 'left');
+  subBtnDept.style('background', '#f5f5f5');
+  subBtnDept.style('border', '1px solid #ddd');
+  subBtnDept.mousePressed(() => {
+    try { window.open('https://www.et.tku.edu.tw/', '_blank'); } catch (e) {}
+  });
 }
 
 // 新增：建立左側選單函式（使用 p5 DOM）
@@ -70,7 +107,7 @@ function createMenu() {
   title.style('font-size', '16px');
 
   // 按鈕清單
-  const items = ['自介', '作品一', '作品二', '作品三'];
+  const items = ['自介', '作品一', '作品二', '作品三', '測驗', '淡江大學'];
   items.forEach((label, i) => {
     const btn = createButton(label);
     btn.parent(menuDiv);
@@ -263,6 +300,7 @@ function onMenuSelect(label) {
     if (iframeOverlay2) iframeOverlay2.style('display', 'none');
     if (iframeOverlay3) iframeOverlay3.style('display', 'none');
     if (textOverlay) textOverlay.style('display', 'none');
+    if (subMenuDiv) subMenuDiv.style('display', 'none');
   };
 
   if (label === '自介') {
@@ -291,6 +329,17 @@ function onMenuSelect(label) {
       iframeEl3.elt.src = 'https://hackmd.io/@IKJIaL22SuqU6vykGoo7mA/SJszsuk2ge';
       iframeOverlay3.style('display', 'block');
     }
+  } else if (label === '測驗') {
+    html = '<strong>測驗</strong><br>請關閉視窗可回到畫面。';
+    hideAllOverlays();
+    if (iframeEl3 && iframeEl3.elt) {
+      iframeEl3.elt.src = 'https://gofanyi123-blip.github.io/1104/';
+      iframeOverlay3.style('display', 'block');
+    }
+  } else if (label === '淡江大學') {
+    html = '<strong>淡江大學</strong><br>請選擇子選單或關閉回到畫面。';
+    hideAllOverlays();
+    if (subMenuDiv) subMenuDiv.style('display', 'block');
   }
   infoDiv.html(html);
 }
